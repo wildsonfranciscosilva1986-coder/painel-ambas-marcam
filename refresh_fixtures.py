@@ -4,7 +4,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import json, os, urllib.request, concurrent.futures
 
-LEAGUES=['bra.1','arg.1','per.1','col.1','usa.1','mex.1','ecu.1','chi.1','uru.1','par.1','bel.1','ned.1','ned.2','nor.1','ita.1','ita.2','fra.1','fra.2','eng.1','eng.2','esp.1','esp.2','ger.1','ger.2','por.1','tur.1','ksa.1','uefa.champions','uefa.europa','fifa.world','fifa.worldq.conmebol','fifa.worldq.uefa','fifa.worldq.concacaf','fifa.worldq.afc','fifa.friendly','concacaf.gold']
+LEAGUES=['bra.1','arg.1','per.1','col.1','usa.1','mex.1','ecu.1','chi.1','uru.1','par.1','bel.1','ned.1','ned.2','nor.1','ita.1','ita.2','fra.1','fra.2','eng.1','eng.2','esp.1','esp.2','ger.1','ger.2','por.1','tur.1','ksa.1','uefa.champions','uefa.europa','uefa.nations','fifa.world','fifa.worldq.conmebol','fifa.worldq.uefa','fifa.worldq.concacaf','fifa.worldq.afc','fifa.friendly','concacaf.gold']
 TODAY=datetime.now(ZoneInfo('America/Sao_Paulo')).strftime('%Y%m%d')
 out={'generated_at':datetime.now(ZoneInfo('America/Sao_Paulo')).isoformat(),'timezone':'America/Sao_Paulo','date':TODAY,'source':'ESPN public scoreboard API','leagues':{},'teams':{},'window':{}}
 for league in LEAGUES:
