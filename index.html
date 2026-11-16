@@ -14,8 +14,10 @@
 <main>
 <section class="controls card">
 <div class="section-head"><div><h2>Buscar partidas</h2><p>Selecione competição e data local. A lista vem do feed público ESPN; horários exibidos em Brasília.</p></div><span id="lastUpdate" class="small"></span></div>
-<div class="control-grid"><label>Competição<select id="league"></select></label><label>Data do jogo<input id="matchDate" type="date"></label><label>Partidas para carregar<select id="limit"><option value="12">Até 12</option><option value="30">Até 30</option><option value="60">Até 60</option></select></label><button id="findBtn" class="btn primary">Buscar partidas</button></div>
-<div id="fixtureStatus" class="statusline">Escolha competição e data e carregue os jogos.</div>
+<div class="control-grid"><label>Competição<select id="league"></select></label><label>Data do jogo<input id="matchDate" type="date"></label><label>Partidas para carregar<select id="limit"><option value="12">Até 12</option><option value="30">Até 30</option><option value="60">Até 60</option></select></label><button id="findBtn" class="btn primary">⌕ Buscar jogos</button></div>
+<div class="custom-search"><div><label>Buscar time mandante<input id="homeTeamSearch" type="search" placeholder="Digite o nome do time..."></label><div class="team-results" id="homeTeamResults"></div></div><div><label>Buscar time visitante<input id="awayTeamSearch" type="search" placeholder="Digite o nome do time..."></label><div class="team-results" id="awayTeamResults"></div></div><button id="customMatchBtn" class="btn">Analisar confronto personalizado</button></div>
+<div class="quick-search"><label>Filtrar jogos carregados<input id="fixtureFilter" type="search" placeholder="⌕ Pesquise mandante ou visitante"></label><span id="selectionStatus" class="small">Selecione dois times para análise personalizada.</span></div>
+<div id="fixtureStatus" class="statusline">Escolha competição/data ou pesquise um confronto personalizado.</div>
 </section>
 <section class="workspace">
 <aside class="fixture-panel card"><div class="section-head"><div><h2>Jogos encontrados</h2><p>Toque para carregar na aba selecionada.</p></div></div><div id="fixtures" class="fixtures empty">Busque a agenda para listar partidas.</div><div class="source-note">Agenda/resultados: feed ESPN público. Isso não substitui a confirmação oficial da competição. Odds: inserir após conferir diretamente na BetWinner.</div></aside>
