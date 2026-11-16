@@ -7,7 +7,7 @@ Aplicação web responsiva para comparar até três partidas e calcular, de form
 - estimativa composta ponderada, odd justa, remoção de margem (quando Sim e Não estão preenchidas), EV e Kelly 1/4 como referência matemática.
 
 ## Dados e automatização
-- Agenda diária e resultados recentes são carregados ao abrir/atualizar a página, conforme competição e data escolhidas.
+- Agenda diária e cache de elenco por 36 competições são atualizados pelo GitHub Actions diariamente às 02h10 BRT; o usuário também pode consultar datas/ligas diretamente no feed ao buscar na página. Resultados recentes por equipe são carregados conforme os IDs do feed e dados de calendário consultados.
 - Fonte automática desta versão: feed público ESPN (calendário, status e partidas concluídas por equipe). A fonte é identificada na interface e não é apresentada como fonte oficial da competição.
 - Cálculos e seleções são feitos no navegador. Os dados dos três jogos ficam no `localStorage` do dispositivo; o botão Exportar baixa JSON. A persistência não sincroniza entre aparelhos.
 - Odds: inserir manualmente após consulta direta à BetWinner, com a hora de captura. A casa bloqueou a leitura automatizada neste ambiente por DNS/região; o painel não finge obter preços.
