@@ -4,12 +4,12 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import json, os, urllib.request, concurrent.futures
 
-LEAGUES=['bra.1','arg.1','per.1','col.1','usa.1','mex.1','ecu.1','chi.1','uru.1','par.1','bel.1','ned.1','ned.2','nor.1','ita.1','ita.2','fra.1','fra.2','eng.1','eng.2','esp.1','esp.2','ger.1','ger.2','por.1','tur.1','ksa.1','uefa.champions','uefa.europa','uefa.nations','fifa.world','fifa.worldq.conmebol','fifa.worldq.uefa','fifa.worldq.concacaf','fifa.worldq.afc','fifa.friendly','concacaf.gold']
+LEAGUES=['bra.1', 'arg.1', 'per.1', 'col.1', 'usa.1', 'mex.1', 'ecu.1', 'chi.1', 'uru.1', 'par.1', 'bel.1', 'ned.1', 'ned.2', 'nor.1', 'ita.1', 'ita.2', 'fra.1', 'fra.2', 'eng.1', 'eng.2', 'esp.1', 'esp.2', 'ger.1', 'ger.2', 'por.1', 'tur.1', 'ksa.1', 'uefa.champions', 'uefa.europa', 'uefa.nations', 'fifa.world', 'fifa.worldq.conmebol', 'fifa.worldq.uefa', 'fifa.worldq.concacaf', 'fifa.worldq.afc', 'fifa.friendly', 'concacaf.gold', 'sui.1', 'sui.2', 'eng.3', 'eng.4', 'eng.5', 'sco.1', 'sco.2', 'sco.3', 'sco.4', 'irl.1', 'swe.1', 'swe.2', 'nor.2', 'usa.usl.1', 'usa.usl.l1', 'conmebol.libertadores', 'conmebol.sudamericana', 'bra.2', 'arg.2', 'arg.3', 'mex.2', 'jpn.1', 'eng.fa', 'eng.league_cup', 'eng.trophy', 'eng.fa_qual', 'ger.dfb_pokal', 'sco.tennents', 'sco.cis', 'sco.challenge', 'fra.coupe_de_france', 'arg.copa', 'bra.copa_do_brazil', 'esp.copa_del_rey', 'ned.cup', 'por.taca.portugal']
 TODAY=datetime.now(ZoneInfo('America/Sao_Paulo')).strftime('%Y%m%d')
 out={'generated_at':datetime.now(ZoneInfo('America/Sao_Paulo')).isoformat(),'timezone':'America/Sao_Paulo','date':TODAY,'source':'ESPN public scoreboard API','leagues':{},'teams':{},'window':{}}
-for league in LEAGUES:
+def fetch_teams(league):
+    team_url=f'https://site.api.espn.com/apis/site/v2/sports/soccer/{league}/teams?limit=500'
     try:
-        team_url=f'https://site.api.espn.com/apis/site/v2/sports/soccer/{league}/teams?limit=500'
         with urllib.request.urlopen(team_url,timeout=20) as response: team_data=json.load(response)
         teams=[]
         for sport in team_data.get('sports',[]):
@@ -17,21 +17,25 @@ for league in LEAGUES:
                 for item in league_data.get('teams',[]):
                     team=item.get('team',item)
                     teams.append({'id':team.get('id'),'name':team.get('displayName') or team.get('name'),'abbreviation':team.get('abbreviation')})
-        out['teams'][league]={'teams':teams,'ok':True}
+        return league,{'teams':teams,'ok':True}
     except Exception as exc:
-        out['teams'][league]={'teams':[],'ok':False,'error':str(exc)}
-for league in LEAGUES:
+        return league,{'teams':[],'ok':False,'error':str(exc)}
+def fetch_today(league):
     url=f'https://site.api.espn.com/apis/site/v2/sports/soccer/{league}/scoreboard?dates={TODAY}'
     try:
         with urllib.request.urlopen(url,timeout=20) as response: data=json.load(response)
-        out['leagues'][league]={'name':(data.get('leagues') or [{}])[0].get('name'), 'events':data.get('events',[]), 'ok':True}
+        return league,{'name':(data.get('leagues') or [{}])[0].get('name'),'events':data.get('events',[]),'ok':True}
     except Exception as exc:
-        out['leagues'][league]={'events':[],'ok':False,'error':str(exc)}
+        return league,{'events':[],'ok':False,'error':str(exc)}
+with concurrent.futures.ThreadPoolExecutor(max_workers=20) as pool:
+    for league,data in pool.map(fetch_teams,LEAGUES): out['teams'][league]=data
+with concurrent.futures.ThreadPoolExecutor(max_workers=20) as pool:
+    for league,data in pool.map(fetch_today,LEAGUES): out['leagues'][league]=data
 os.makedirs('data',exist_ok=True)
 with open('data/fixtures-today.json','w',encoding='utf8') as f: json.dump(out,f,ensure_ascii=False,separators=(',',':'))
 print('Date',TODAY,'leagues',len(out['leagues']),'fixtures',sum(len(x.get('events',[])) for x in out['leagues'].values()),'failed',sum(not x.get('ok') for x in out['leagues'].values()))
 
-# Cache upcoming fixtures over the next 10 BRT calendar days, enabling team-first search across leagues.
+# Cache upcoming fixtures over the next 31 BRT dates (today + 30 days), enabling team-first search across leagues.
 def fetch_day(item):
     league, day = item
     url=f'https://site.api.espn.com/apis/site/v2/sports/soccer/{league}/scoreboard?dates={day}'
