@@ -1,7 +1,7 @@
 # Painel Ambas Marcam
 
 Aplicação web responsiva para comparar até três partidas e calcular, de forma transparente:
-- probabilidade de BTTS via Poisson usando ataque/defesa casa-fora com shrinkage à média da liga;
+- probabilidade de BTTS via Poisson usando ataque/defesa casa-fora com shrinkage à média por equipe configurável (padrão 1,35, parâmetro manual, não média automática observada da liga);
 - frequência histórica média dos jogos recentes de cada equipe;
 - frequência dos confrontos diretos anteriores disponíveis no calendário consultado;
 - estimativa composta ponderada, odd justa, remoção de margem (quando Sim e Não estão preenchidas), EV e Kelly 1/4 como referência matemática.
