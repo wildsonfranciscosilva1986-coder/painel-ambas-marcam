@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Painel Ambas Marcam — análise transparente</title>
+<meta name="description" content="Painel interativo para analisar Ambas Marcam com resultados recentes, Poisson, histórico, H2H e comparação de odds.">
+<meta property="og:type" content="website"><meta property="og:title" content="Painel Ambas Marcam"><meta property="og:description" content="Compare até três jogos com dados recentes e cálculos auditáveis.">
+<meta name="theme-color" content="#0b1220">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><div class="brand"><span class="ball">⚽</span><div><h1>Painel Ambas Marcam</h1><p>Análise estatística auditável · sem promessa de acerto</p></div></div><div class="top-actions"><span id="netState" class="pill muted">Conectando fontes…</span><button id="refreshBtn" class="btn primary">⟳ Atualizar jogos</button></div></header>
+<main>
+<section class="controls card">
+<div class="section-head"><div><h2>Buscar partidas</h2><p>Selecione competição e data local. A lista vem do feed público ESPN; horários exibidos em Brasília.</p></div><span id="lastUpdate" class="small"></span></div>
+<div class="control-grid"><label>Competição<select id="league"></select></label><label>Data do jogo<input id="matchDate" type="date"></label><label>Partidas para carregar<select id="limit"><option value="12">Até 12</option><option value="30">Até 30</option><option value="60">Até 60</option></select></label><button id="findBtn" class="btn primary">Buscar partidas</button></div>
+<div id="fixtureStatus" class="statusline">Escolha competição e data e carregue os jogos.</div>
+</section>
+<section class="workspace">
+<aside class="fixture-panel card"><div class="section-head"><div><h2>Jogos encontrados</h2><p>Toque para carregar na aba selecionada.</p></div></div><div id="fixtures" class="fixtures empty">Busque a agenda para listar partidas.</div><div class="source-note">Agenda/resultados: feed ESPN público. Isso não substitui a confirmação oficial da competição. Odds: inserir após conferir diretamente na BetWinner.</div></aside>
+<div class="analysis card">
+<div class="tabs-head"><div><h2>Comparar até 3 jogos</h2><p>Os campos ficam salvos neste navegador.</p></div><div class="tabs" id="tabs"></div><button id="clearSlot" class="btn ghost">Limpar aba</button></div>
+<div id="slotContent"></div>
+</div>
+</section>
+<section class="card methodology"><h2>Como o painel calcula</h2><div class="method-grid"><div><b>Poisson (50%)</b><p>Estima λ de cada equipe cruzando ataque e defesa no mando correspondente; amostras curtas são puxadas à média informada da liga. P(BTTS)=P(casa marca)×P(fora marca).</p></div><div><b>Forma histórica (30%)</b><p>Média das taxas de BTTS nos jogos recentes de cada equipe. Descritivo, com denominadores visíveis; não é previsão validada.</p></div><div><b>H2H (20%)</b><p>Frequência nos confrontos diretos disponíveis, encolhida em direção à média da liga. Se um caminho não tiver dados, pesos dos caminhos restantes são normalizados.</p></div><div><b>Odd e valor esperado</b><p>Com as duas odds Sim/Não, remove margem proporcional. EV Sim = probabilidade estimada × odd − 1. Kelly ¼ é apenas referência matemática, não recomendação de stake.</p></div></div><div class="warning"><b>Limites:</b> estatística histórica não garante resultado. O modelo assume independência entre gols, e as amostras podem ser pequenas. xG, lesões, viagens e contexto só aparecem quando uma fonte verificável fornecer esses dados. Odds da BetWinner não são coletadas automaticamente nesta versão devido ao bloqueio de acesso; insira preço e horário de captura manualmente.</div></section>
+<footer>Projeto pessoal · dados e horário da última atualização aparecem por jogo · odds ausentes permanecem ND.</footer>
+</main>
+<script src="app.js"></script>
+</body></html>
